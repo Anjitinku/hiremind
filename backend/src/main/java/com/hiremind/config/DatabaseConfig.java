@@ -1,4 +1,4 @@
-﻿package com.hiremind.config;
+package com.hiremind.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -26,7 +26,6 @@ public class DatabaseConfig {
 
         try {
             String cleanUrl = databaseUrl.trim();
-            // If prefixed with jdbc:, strip it for URI parsing
             if (cleanUrl.startsWith("jdbc:")) {
                 cleanUrl = cleanUrl.substring(5);
             }
