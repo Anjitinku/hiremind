@@ -25,16 +25,13 @@ public class DatabaseConfig {
         }
 
         try {
-            // If already a valid JDBC URL, use as-is
-            if (databaseUrl.startsWith("jdbc:")) {
-                return DataSourceBuilder.create()
-                        .url(databaseUrl)
-                        .driverClassName("org.postgresql.Driver")
-                        .build();
+            String cleanUrl = databaseUrl.trim();
+            // If prefixed with jdbc:, strip it for URI parsing
+            if (cleanUrl.startsWith("jdbc:")) {
+                cleanUrl = cleanUrl.substring(5);
             }
 
-            // Otherwise, parse standard URI: postgresql://user:password@host:port/dbname
-            URI uri = new URI(databaseUrl);
+            URI uri = new URI(cleanUrl);
             String userInfo = uri.getUserInfo();
             String username = "";
             String password = "";
@@ -47,7 +44,8 @@ public class DatabaseConfig {
 
             int port = uri.getPort() == -1 ? 5432 : uri.getPort();
             String jdbcUrl = "jdbc:postgresql://" + uri.getHost() + ":" + port + uri.getPath();
-            if (uri.getQuery() != null) {
+            
+            if (uri.getQuery() != null && !uri.getQuery().isBlank()) {
                 jdbcUrl += "?" + uri.getQuery();
             } else {
                 jdbcUrl += "?sslmode=require";
