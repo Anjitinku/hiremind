@@ -46,6 +46,43 @@ public class CodingService {
                 return toResponse(p);
         }
 
+        public CodingProblemResponse createProblem(com.hiremind.dto.CodingProblemRequest req) {
+                CodingProblem p = new CodingProblem();
+                p.setTitle(req.getTitle());
+                p.setDifficulty(Difficulty.valueOf(req.getDifficulty().toUpperCase()));
+                p.setDescription(req.getDescription());
+                p.setExamples(req.getExamples());
+                p.setConstraints(req.getConstraints());
+                p.setTags(req.getTags());
+                p.setStarterCode(req.getStarterCode() != null && !req.getStarterCode().isBlank() 
+                                ? req.getStarterCode() 
+                                : "// Write your solution here\n");
+                p.setTestCasesJson(req.getTestCasesJson());
+                p.setAcceptanceRate(req.getAcceptanceRate() != null ? req.getAcceptanceRate() : 50.0);
+                return toResponse(codingProblemRepository.save(p));
+        }
+
+        public CodingProblemResponse updateProblem(Long id, com.hiremind.dto.CodingProblemRequest req) {
+                CodingProblem p = codingProblemRepository.findById(id)
+                                .orElseThrow(() -> new ResourceNotFoundException("Problem not found with id: " + id));
+                if (req.getTitle() != null) p.setTitle(req.getTitle());
+                if (req.getDifficulty() != null) p.setDifficulty(Difficulty.valueOf(req.getDifficulty().toUpperCase()));
+                if (req.getDescription() != null) p.setDescription(req.getDescription());
+                if (req.getExamples() != null) p.setExamples(req.getExamples());
+                if (req.getConstraints() != null) p.setConstraints(req.getConstraints());
+                if (req.getTags() != null) p.setTags(req.getTags());
+                if (req.getStarterCode() != null) p.setStarterCode(req.getStarterCode());
+                if (req.getTestCasesJson() != null) p.setTestCasesJson(req.getTestCasesJson());
+                if (req.getAcceptanceRate() != null) p.setAcceptanceRate(req.getAcceptanceRate());
+                return toResponse(codingProblemRepository.save(p));
+        }
+
+        public void deleteProblem(Long id) {
+                CodingProblem p = codingProblemRepository.findById(id)
+                                .orElseThrow(() -> new ResourceNotFoundException("Problem not found with id: " + id));
+                codingProblemRepository.delete(p);
+        }
+
         public CodingSubmissionResponse submitSolution(CodingSubmissionRequest req, Long userId) {
                 User user = userRepository.findById(userId)
                                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));

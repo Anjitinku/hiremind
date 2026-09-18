@@ -49,4 +49,34 @@ public class CodingController {
     public ResponseEntity<List<CodingSubmissionResponse>> getMySubmissions() {
         return ResponseEntity.ok(codingService.getMySubmissions(currentUser().getId()));
     }
+
+    @PostMapping
+    public ResponseEntity<CodingProblemResponse> createProblem(@RequestBody com.hiremind.dto.CodingProblemRequest request) {
+        User user = currentUser();
+        if (user.getRole() != com.hiremind.model.Role.ADMIN) {
+            throw new org.springframework.security.access.AccessDeniedException("Only Administrators can create coding problems");
+        }
+        return ResponseEntity.ok(codingService.createProblem(request));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<CodingProblemResponse> updateProblem(
+            @PathVariable Long id,
+            @RequestBody com.hiremind.dto.CodingProblemRequest request) {
+        User user = currentUser();
+        if (user.getRole() != com.hiremind.model.Role.ADMIN) {
+            throw new org.springframework.security.access.AccessDeniedException("Only Administrators can edit coding problems");
+        }
+        return ResponseEntity.ok(codingService.updateProblem(id, request));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteProblem(@PathVariable Long id) {
+        User user = currentUser();
+        if (user.getRole() != com.hiremind.model.Role.ADMIN) {
+            throw new org.springframework.security.access.AccessDeniedException("Only Administrators can delete coding problems");
+        }
+        codingService.deleteProblem(id);
+        return ResponseEntity.noContent().build();
+    }
 }

@@ -1,2 +1,2 @@
 package com.hiremind.model;
-public enum Role { CANDIDATE, RECRUITER }
+public enum Role { CANDIDATE, RECRUITER, ADMIN }

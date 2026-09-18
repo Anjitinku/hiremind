@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
 import { getProblems } from '../api/coding';
+import { useAuth } from '../context/AuthContext';
 import ProblemRow from '../components/ProblemRow';
 import { Search, Flame } from 'lucide-react';
 
 const CodingProblems = () => {
+  const { user } = useAuth();
   const [problems, setProblems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('All');
@@ -31,14 +33,24 @@ const CodingProblems = () => {
           <h1 className="text-3xl font-bold text-white mb-2">Coding Problems</h1>
           <p className="text-slate-400">Master algorithms and prepare for technical interviews.</p>
         </div>
-        <div className="flex gap-4 items-center bg-slate-800 p-4 rounded-xl border border-slate-700">
-          <div className="text-center px-4 border-r border-slate-700">
-            <div className="text-2xl font-bold text-white">42</div>
-            <div className="text-xs text-slate-400">Solved</div>
-          </div>
-          <div className="text-center px-4 flex flex-col items-center">
-            <div className="flex items-center gap-1 text-2xl font-bold text-orange-400"><Flame className="w-5 h-5"/> 7</div>
-            <div className="text-xs text-slate-400">Day Streak</div>
+        <div className="flex gap-3 items-center">
+          {user?.role === 'ADMIN' && (
+            <a
+              href="/admin"
+              className="flex items-center gap-2 bg-purple-600 hover:bg-purple-700 text-white px-4 py-3 rounded-xl font-semibold shadow-md transition-all text-sm"
+            >
+              + Add New Problem
+            </a>
+          )}
+          <div className="flex gap-4 items-center bg-slate-800 p-4 rounded-xl border border-slate-700">
+            <div className="text-center px-4 border-r border-slate-700">
+              <div className="text-2xl font-bold text-white">{problems.length}</div>
+              <div className="text-xs text-slate-400">Total</div>
+            </div>
+            <div className="text-center px-4 flex flex-col items-center">
+              <div className="flex items-center gap-1 text-2xl font-bold text-orange-400"><Flame className="w-5 h-5"/> 7</div>
+              <div className="text-xs text-slate-400">Day Streak</div>
+            </div>
           </div>
         </div>
       </div>

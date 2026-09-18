@@ -44,18 +44,30 @@ const ProblemDetail = () => {
           <p className="whitespace-pre-wrap mb-8">{problem.description}</p>
           
           <h3 className="text-lg font-semibold text-white mb-4">Examples</h3>
-          {problem.examples.map((ex, i) => (
-            <div key={i} className="bg-slate-800 p-4 rounded-lg mb-4 border border-slate-700 font-mono text-sm">
-              <div><strong>Input:</strong> {ex.input}</div>
-              <div><strong>Output:</strong> {ex.output}</div>
-              {ex.explanation && <div className="mt-2 text-slate-400"><strong>Explanation:</strong> {ex.explanation}</div>}
+          {Array.isArray(problem.examples) ? (
+            problem.examples.map((ex, i) => (
+              <div key={i} className="bg-slate-800 p-4 rounded-lg mb-4 border border-slate-700 font-mono text-sm">
+                <div><strong>Input:</strong> {ex.input}</div>
+                <div><strong>Output:</strong> {ex.output}</div>
+                {ex.explanation && <div className="mt-2 text-slate-400"><strong>Explanation:</strong> {ex.explanation}</div>}
+              </div>
+            ))
+          ) : (
+            <div className="bg-slate-800 p-4 rounded-lg mb-4 border border-slate-700 font-mono text-sm whitespace-pre-wrap">
+              {problem.examples || 'No examples provided.'}
             </div>
-          ))}
+          )}
 
           <h3 className="text-lg font-semibold text-white mt-8 mb-4">Constraints</h3>
-          <ul className="list-disc pl-5 space-y-1 font-mono text-sm bg-slate-800 p-4 rounded-lg border border-slate-700">
-            {problem.constraints.map((c, i) => <li key={i}>{c}</li>)}
-          </ul>
+          {Array.isArray(problem.constraints) ? (
+            <ul className="list-disc pl-5 space-y-1 font-mono text-sm bg-slate-800 p-4 rounded-lg border border-slate-700">
+              {problem.constraints.map((c, i) => <li key={i}>{c}</li>)}
+            </ul>
+          ) : (
+            <div className="bg-slate-800 p-4 rounded-lg border border-slate-700 font-mono text-sm whitespace-pre-wrap">
+              {problem.constraints || 'Standard constraints apply.'}
+            </div>
+          )}
         </div>
       </div>
 

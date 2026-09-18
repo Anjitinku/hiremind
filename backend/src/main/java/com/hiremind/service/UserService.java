@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import jakarta.annotation.PostConstruct;
 import java.util.ArrayList;
 
 @Service
@@ -20,6 +21,22 @@ public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final ProfileRepository profileRepository;
     private final PasswordEncoder passwordEncoder;
+
+    @PostConstruct
+    public void seedAdmin() {
+        if (userRepository.findByEmail("admin@hiremind.ai").isEmpty()) {
+            User admin = User.builder()
+                    .name("Site Administrator")
+                    .email("admin@hiremind.ai")
+                    .passwordHash(passwordEncoder.encode("admin123"))
+                    .role(com.hiremind.model.Role.ADMIN)
+                    .enabled(true)
+                    .build();
+            User saved = userRepository.save(admin);
+            Profile profile = Profile.builder().user(saved).bio("System Administrator for HireMind AI platform").title("Administrator").build();
+            profileRepository.save(profile);
+        }
+    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

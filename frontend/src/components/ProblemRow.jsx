@@ -23,13 +23,18 @@ const ProblemRow = ({ problem }) => {
       </td>
       <td className="px-6 py-4">
         <div className="flex gap-2 flex-wrap">
-          {problem.tags.map(tag => (
-            <span key={tag} className="bg-slate-700 text-slate-300 text-xs px-2 py-1 rounded-md">{tag}</span>
+          {(Array.isArray(problem.tags) 
+            ? problem.tags 
+            : typeof problem.tags === 'string' 
+              ? problem.tags.split(',') 
+              : []
+          ).map((tag, idx) => (
+            <span key={idx} className="bg-slate-700 text-slate-300 text-xs px-2 py-1 rounded-md">{tag.trim()}</span>
           ))}
         </div>
       </td>
       <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-300">
-        {problem.acceptance}
+        {problem.acceptanceRate ? `${problem.acceptanceRate}%` : (problem.acceptance || '50%')}
       </td>
       <td className={`px-6 py-4 whitespace-nowrap text-sm font-medium ${getDifficultyColor(problem.difficulty)}`}>
         {problem.difficulty}

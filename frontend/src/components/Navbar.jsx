@@ -15,6 +15,7 @@ const Navbar = () => {
 
   const navLinks = isAuthenticated
     ? [
+        ...(user?.role === 'ADMIN' ? [{ name: '🛡️ Admin Panel', path: '/admin' }] : []),
         { name: 'Coding Problems', path: '/problems' },
         { name: 'Jobs', path: '/jobs' },
         { name: 'ATS Score Checker', path: '/ats' },
@@ -59,6 +60,11 @@ const Navbar = () => {
                     <Link to="/profile" className="flex items-center px-4 py-2 text-sm text-slate-300 hover:bg-slate-700 hover:text-white">
                       <User className="mr-2 h-4 w-4" /> Profile
                     </Link>
+                    {user.role === 'ADMIN' && (
+                      <Link to="/admin" className="flex items-center px-4 py-2 text-sm text-purple-400 hover:bg-slate-700 hover:text-purple-300 font-semibold">
+                        <Brain className="mr-2 h-4 w-4 text-purple-400" /> Admin Panel
+                      </Link>
+                    )}
                     {user.role === 'RECRUITER' && (
                       <Link to="/recruiter" className="flex items-center px-4 py-2 text-sm text-slate-300 hover:bg-slate-700 hover:text-white">
                         <Brain className="mr-2 h-4 w-4" /> Dashboard

@@ -54,6 +54,9 @@ const Register = () => {
               <label className="flex items-center text-white text-sm cursor-pointer">
                 <input type="radio" name="role" value="RECRUITER" checked={formData.role === 'RECRUITER'} onChange={(e) => setFormData({...formData, role: e.target.value})} className="mr-2" /> Recruiter
               </label>
+              <label className="flex items-center text-purple-400 text-sm font-semibold cursor-pointer">
+                <input type="radio" name="role" value="ADMIN" checked={formData.role === 'ADMIN'} onChange={(e) => setFormData({...formData, role: e.target.value})} className="mr-2" /> Admin
+              </label>
             </div>
           </div>
 

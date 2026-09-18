@@ -17,6 +17,7 @@ import AIInterview from './pages/AIInterview';
 import Profile from './pages/Profile';
 import CareerMatch from './pages/CareerMatch';
 import RecruiterDashboard from './pages/RecruiterDashboard';
+import AdminDashboard from './pages/AdminDashboard';
 import NotFound from './pages/NotFound';
 
 function App() {
@@ -37,6 +38,7 @@ function App() {
             <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
             <Route path="/career-match" element={<ProtectedRoute><CareerMatch /></ProtectedRoute>} />
             <Route path="/recruiter" element={<ProtectedRoute><RecruiterDashboard /></ProtectedRoute>} />
+            <Route path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </main>
