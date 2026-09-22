@@ -25,10 +25,11 @@ public class AuthService {
     }
 
     public AuthResponse login(AuthRequest request) {
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
-        var userDetails = userService.loadUserByUsername(request.getEmail());
+        String email = request.getEmail().trim().toLowerCase();
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, request.getPassword()));
+        var userDetails = userService.loadUserByUsername(email);
         var token = jwtUtil.generateToken(userDetails);
-        var user = userRepository.findByEmail(request.getEmail()).orElseThrow();
+        var user = userRepository.findByEmail(email).orElseThrow();
         return AuthResponse.builder().token(token).user(user).build();
     }
 }

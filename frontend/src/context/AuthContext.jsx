@@ -1,4 +1,5 @@
 import { useState, useEffect, createContext, useContext } from 'react';
+import { loginUser, registerUser } from '../api/auth';
 
 const AuthContext = createContext(null);
 
@@ -8,22 +9,36 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const savedUser = localStorage.getItem('hiremind_user');
     if (savedUser) {
-      setUser(JSON.parse(savedUser));
+      try {
+        setUser(JSON.parse(savedUser));
+      } catch (e) {
+        localStorage.removeItem('hiremind_user');
+      }
     }
   }, []);
 
-  const login = (email, password) => {
-    const mockUser = { id: 1, name: 'Alex Johnson', email, role: 'CANDIDATE', avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Alex' };
-    setUser(mockUser);
-    localStorage.setItem('hiremind_user', JSON.stringify(mockUser));
-    localStorage.setItem('hiremind_token', 'mock_jwt_token_123');
+  const login = async (email, password) => {
+    const data = await loginUser(email, password);
+    const userData = {
+      ...data.user,
+      avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${data.user.name || 'User'}`
+    };
+    setUser(userData);
+    localStorage.setItem('hiremind_user', JSON.stringify(userData));
+    localStorage.setItem('hiremind_token', data.token);
+    return userData;
   };
 
-  const register = (data) => {
-    const mockUser = { id: 2, name: data.name, email: data.email, role: data.role || 'CANDIDATE', avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${data.name}` };
-    setUser(mockUser);
-    localStorage.setItem('hiremind_user', JSON.stringify(mockUser));
-    localStorage.setItem('hiremind_token', 'mock_jwt_token_456');
+  const register = async (formData) => {
+    const data = await registerUser(formData);
+    const userData = {
+      ...data.user,
+      avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${data.user.name || 'User'}`
+    };
+    setUser(userData);
+    localStorage.setItem('hiremind_user', JSON.stringify(userData));
+    localStorage.setItem('hiremind_token', data.token);
+    return userData;
   };
 
   const logout = () => {

@@ -45,11 +45,15 @@ public class UserService implements UserDetailsService {
     }
 
     public User registerUser(RegisterRequest request) {
+        String email = request.getEmail().trim().toLowerCase();
+        if (userRepository.findByEmail(email).isPresent()) {
+            throw new RuntimeException("An account with this email already exists. Please log in.");
+        }
         User user = User.builder()
-                .name(request.getName())
-                .email(request.getEmail())
+                .name(request.getName().trim())
+                .email(email)
                 .passwordHash(passwordEncoder.encode(request.getPassword()))
-                .role(request.getRole())
+                .role(request.getRole() != null ? request.getRole() : com.hiremind.model.Role.CANDIDATE)
                 .build();
         User savedUser = userRepository.save(user);
         Profile profile = Profile.builder().user(savedUser).build();

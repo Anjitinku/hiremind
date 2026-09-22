@@ -1,7 +1,10 @@
 import { Link } from 'react-router-dom';
-import { CheckCircle, Brain, Target, ArrowRight } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
+import { CheckCircle, Brain, Target, ArrowRight, Shield, Code, Briefcase } from 'lucide-react';
 
 const Home = () => {
+  const { user, isAuthenticated } = useAuth();
+
   return (
     <div>
       {/* Hero Section */}
@@ -14,13 +17,36 @@ const Home = () => {
           <p className="mt-4 text-xl text-slate-300 max-w-3xl mx-auto mb-10">
             Master coding interviews, optimize your resume with ATS insights, and get matched with top tech companies—all in one unified platform.
           </p>
-          <div className="flex justify-center gap-4">
-            <Link to="/register" className="bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-4 rounded-xl font-bold text-lg transition-all shadow-[0_0_20px_rgba(79,70,229,0.4)]">
-              Get Started for Free
-            </Link>
-            <Link to="/jobs" className="bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white px-8 py-4 rounded-xl font-bold text-lg transition-all">
-              Explore Jobs
-            </Link>
+          <div className="flex justify-center gap-4 flex-wrap">
+            {isAuthenticated ? (
+              <>
+                {user?.role === 'ADMIN' ? (
+                  <Link to="/admin" className="bg-purple-600 hover:bg-purple-700 text-white px-8 py-4 rounded-xl font-bold text-lg transition-all shadow-[0_0_20px_rgba(147,51,234,0.4)] flex items-center gap-2">
+                    <Shield className="w-5 h-5" /> Open Admin Panel
+                  </Link>
+                ) : user?.role === 'RECRUITER' ? (
+                  <Link to="/recruiter" className="bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-4 rounded-xl font-bold text-lg transition-all shadow-[0_0_20px_rgba(79,70,229,0.4)] flex items-center gap-2">
+                    <Briefcase className="w-5 h-5" /> Recruiter Dashboard
+                  </Link>
+                ) : (
+                  <Link to="/problems" className="bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-4 rounded-xl font-bold text-lg transition-all shadow-[0_0_20px_rgba(79,70,229,0.4)] flex items-center gap-2">
+                    <Code className="w-5 h-5" /> Practice Coding
+                  </Link>
+                )}
+                <Link to="/jobs" className="bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white px-8 py-4 rounded-xl font-bold text-lg transition-all">
+                  Explore Jobs
+                </Link>
+              </>
+            ) : (
+              <>
+                <Link to="/register" className="bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-4 rounded-xl font-bold text-lg transition-all shadow-[0_0_20px_rgba(79,70,229,0.4)]">
+                  Get Started for Free
+                </Link>
+                <Link to="/jobs" className="bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white px-8 py-4 rounded-xl font-bold text-lg transition-all">
+                  Explore Jobs
+                </Link>
+              </>
+            )}
           </div>
         </div>
       </section>
@@ -84,9 +110,26 @@ const Home = () => {
         <div className="max-w-4xl mx-auto px-4 text-center relative z-10">
           <h2 className="text-3xl font-bold text-white mb-6">Ready to Accelerate Your Career?</h2>
           <p className="text-indigo-100 text-lg mb-8">Join thousands of developers who have landed their dream roles using HireMind AI.</p>
-          <Link to="/register" className="inline-flex items-center gap-2 bg-white text-indigo-600 px-8 py-4 rounded-xl font-bold text-lg hover:bg-slate-100 transition-colors">
-            Create Free Account <ArrowRight className="w-5 h-5" />
-          </Link>
+          
+          {isAuthenticated ? (
+            user?.role === 'ADMIN' ? (
+              <Link to="/admin" className="inline-flex items-center gap-2 bg-white text-purple-700 px-8 py-4 rounded-xl font-bold text-lg hover:bg-slate-100 transition-colors shadow-lg">
+                Go to Admin Panel <ArrowRight className="w-5 h-5" />
+              </Link>
+            ) : user?.role === 'RECRUITER' ? (
+              <Link to="/recruiter" className="inline-flex items-center gap-2 bg-white text-indigo-600 px-8 py-4 rounded-xl font-bold text-lg hover:bg-slate-100 transition-colors shadow-lg">
+                Go to Recruiter Dashboard <ArrowRight className="w-5 h-5" />
+              </Link>
+            ) : (
+              <Link to="/problems" className="inline-flex items-center gap-2 bg-white text-indigo-600 px-8 py-4 rounded-xl font-bold text-lg hover:bg-slate-100 transition-colors shadow-lg">
+                Start Coding Practice <ArrowRight className="w-5 h-5" />
+              </Link>
+            )
+          ) : (
+            <Link to="/register" className="inline-flex items-center gap-2 bg-white text-indigo-600 px-8 py-4 rounded-xl font-bold text-lg hover:bg-slate-100 transition-colors shadow-lg">
+              Create Free Account <ArrowRight className="w-5 h-5" />
+            </Link>
+          )}
         </div>
       </section>
     </div>
