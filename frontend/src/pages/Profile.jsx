@@ -35,6 +35,7 @@ export default function Profile() {
     linkedinUrl: user?.linkedinUrl || 'https://linkedin.com',
     githubUrl: user?.githubUrl || 'https://github.com',
     role: user?.role || 'CANDIDATE',
+    avatar: user?.avatar || null,
     resumeName: user?.resumeName || 'alex_johnson_resume.pdf',
   });
 
@@ -83,15 +84,31 @@ export default function Profile() {
     }
   };
 
+  const handleAvatarUpload = (e) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        const dataUrl = ev.target.result;
+        setProfileData(prev => ({ ...prev, avatar: dataUrl }));
+        if (updateUser) updateUser({ avatar: dataUrl });
+        toast.success('Avatar uploaded');
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   return (
     <div className="max-w-5xl mx-auto px-4 py-10 w-full">
       {/* Header */}
         <div className="bg-slate-800 rounded-2xl p-8 mb-6 shadow-xl flex flex-col sm:flex-row items-start sm:items-center gap-6 border border-slate-700/50">
           <img
-            src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${profileData.name}`}
+            src={profileData.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${profileData.name}`}
             alt="Avatar"
             className="w-24 h-24 rounded-full bg-slate-700 border-4 border-indigo-500 shadow-lg"
           />
+          <input type="file" accept="image/*" id="avatarUpload" className="hidden" onChange={handleAvatarUpload} />
+          <label htmlFor="avatarUpload" className="mt-2 text-sm text-indigo-400 hover:underline cursor-pointer">Change Avatar</label>
           <div className="flex-1">
             <div className="flex items-center gap-3 mb-1">
               <h1 className="text-2xl font-bold text-white">{profileData.name}</h1>

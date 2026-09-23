@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: hiremind-1
+    runtime: java
+    plan: free
+    buildCommand: cd backend && mvn clean package -DskipTests
+    startCommand: java -Dspring.profiles.active=prod -jar backend/target/hiremind-backend-1.0.0.jar
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+      - key: JWT_SECRET
+        sync: false
+      - key: FRONTEND_URL
+        value: https://hiremind.vercel.app
+      - key: MAIL_USERNAME
+        sync: false
+      - key: MAIL_PASSWORD
+        sync: false
+    databases:
+      - name: hiremind-db
+        databaseName: hiremind
+        user: hiremind
